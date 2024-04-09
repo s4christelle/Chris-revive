@@ -79,20 +79,6 @@ pipeline {
 
 
 
-        stage('Test microservice order') {
-            agent {
-                docker {
-                    image 'maven:3.8.7-openjdk-18'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/order/
-                    mvn  test  -Dmaven.test.skip=true --quiet
-                '''
-            }
-        }
 
         
     }
