@@ -56,10 +56,12 @@ pipeline {
             }
             steps {
                 sh '''
-                    cd $WORKSPACE/REVIVE/src/order/
+                    cd $WORKSPACE/REVIVE/src/orders/
                     mvn  test  -Dmaven.test.skip=true --quiet
                 '''
             }
         }
+
+        
     }
 }
