@@ -119,6 +119,69 @@ pipeline {
             }
         }
 
+        stage('Build microservice cart') {
+            agent {
+                docker {
+                    image 'maven:3.8.7-openjdk-18'
+                    args '-u 0:0'
+                }
+            }
+            steps {
+                sh '''
+                    cd $WORKSPACE/REVIVE/src/cart/
+                   mvn  package -Dmaven.test.skip=true --quiet
+                '''
+            }
+        }
+
+
+        stage('Build microservice ui') {
+            agent {
+                docker {
+                    image 'maven:3.8.7-openjdk-18'
+                    args '-u 0:0'
+                }
+            }
+            steps {
+                sh '''
+                    cd $WORKSPACE/REVIVE/src/ui/
+                    mvn  package -Dmaven.test.skip=true --quiet
+                '''
+            }
+        }
+
+        stage('Build microservice order') {
+            agent {
+                docker {
+                    image 'maven:3.8.7-openjdk-18'
+                    args '-u 0:0'
+                }
+            }
+            steps {
+                sh '''
+                    cd $WORKSPACE/REVIVE/src/orders/
+                    mvn  package -Dmaven.test.skip=true --quiet
+                '''
+            }
+        }
+
+
+        stage('Build microservice checkout') {
+            agent {
+                docker {
+                    image 'node'
+                    args '-u 0:0'
+                }
+            }
+            steps {
+                sh '''
+                    cd $WORKSPACE/REVIVE/src/checkout/
+                    npm install
+                    npm run build
+                '''
+            }
+        }
+
 
         
 
