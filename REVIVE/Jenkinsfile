@@ -76,36 +76,56 @@ pipeline {
                 '''
             }
         }
+        
 
 
 
-        stage('SonarQube analysis') {
-                agent {
-                    docker {
-                      image 'devopseasylearning/sonar-scanner-revive:v1.0.0'
-                    }
-                   }
-                   environment {
-            CI = 'true'
-            scannerHome='/opt/sonar-scanner'
-        }
-                steps{
-                    withSonarQubeEnv('sonar') {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
+//      stage('SonarQube analysis') {
+//                 agent {
+//                     docker {
+//                      image 'devopseasylearning/sonar-scanner-revive:v1.0.0'
+//                    }
+//                   }
+//                   environment {
+//            CI = 'true'
+//            scannerHome='/opt/sonar-scanner'
+//        }
+//                steps{
+//                    withSonarQubeEnv('sonar') {
+//                        sh "${scannerHome}/bin/sonar-scanner"
+//                    }
+//                }
+//            }
+//        stage("Quality Gate") {
+//                steps {
+//                  timeout(time: 1, unit: 'HOURS') {
+//                    waitForQualityGate abortPipeline: true
+//                  }
+//                }
+//              }
+
+          stage('Test microservice catalog') {
+            agent {
+                docker {
+                    image 'golang:1.20.1'
+                    args '-u 0:0'
                 }
             }
-        stage("Quality Gate") {
-                steps {
-                  timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                  }
-                }
-              }
-
-
+            steps {
+                sh '''
+                    cd $WORKSPACE/REVIVE/src/catalog/
+                    go build   -buildvcs=false
+                '''
+            }
+        }
 
 
         
+
+    
     }
-}
+
+
+
+ }        
+
