@@ -104,7 +104,7 @@ pipeline {
 //                }
 //              }
 
-          stage('Test microservice catalog') {
+          stage('Build microservice catalog') {
             agent {
                 docker {
                     image 'golang:1.20.1'
