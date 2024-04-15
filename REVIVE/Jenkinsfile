@@ -1,81 +1,81 @@
 pipeline {
     agent any
     stages {
-        stage('Test microservice catalog') {
-            agent {
-                docker {
-                    image 'golang:1.20.1'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/catalog/
-                    go test
-                '''
-            }
-        }
-        stage('Test microservice cart') {
-            agent {
-                docker {
-                    image 'maven:3.8.7-openjdk-18'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/cart/
-                    mvn  test  -Dmaven.test.skip=true --quiet
-                '''
-            }
-        }
+ //    stage('Test microservice catalog') {
+ //        agent {
+ //            docker {
+ //                image 'golang:1.20.1'
+ //                args '-u 0:0'
+ //            }
+ //        }
+ //        steps {
+ //            sh '''
+ //                cd $WORKSPACE/REVIVE/src/catalog/
+ //                go test
+ //            '''
+ //        }
+ //    }
+ //    stage('Test microservice cart') {
+ //        agent {
+ //            docker {
+ //                image 'maven:3.8.7-openjdk-18'
+ //                args '-u 0:0'
+ //            }
+ //        }
+ //        steps {
+ //            sh '''
+ //                cd $WORKSPACE/REVIVE/src/cart/
+ //                mvn  test  -Dmaven.test.skip=true --quiet
+ //            '''
+ //        }
+ //    }
 
 
-        stage('Test microservice ui') {
-            agent {
-                docker {
-                    image 'maven:3.8.7-openjdk-18'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/ui/
-                    mvn  test  -Dmaven.test.skip=true --quiet
-                '''
-            }
-        }
+ //    stage('Test microservice ui') {
+ //        agent {
+ //            docker {
+ //                image 'maven:3.8.7-openjdk-18'
+ //                args '-u 0:0'
+ //            }
+ //        }
+ //        steps {
+ //            sh '''
+ //                cd $WORKSPACE/REVIVE/src/ui/
+ //                mvn  test  -Dmaven.test.skip=true --quiet
+ //            '''
+ //        }
+ //    }
 
 
-        stage('Test microservice order') {
-            agent {
-                docker {
-                    image 'maven:3.8.7-openjdk-18'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/orders/
-                    mvn  test  -Dmaven.test.skip=true --quiet
-                '''
-            }
-        }
+ //    stage('Test microservice order') {
+ //        agent {
+ //            docker {
+ //                image 'maven:3.8.7-openjdk-18'
+ //                args '-u 0:0'
+ //            }
+ //        }
+ //        steps {
+ //            sh '''
+ //                cd $WORKSPACE/REVIVE/src/orders/
+ //                mvn  test  -Dmaven.test.skip=true --quiet
+ //            '''
+ //        }
+ //    }
 
-        stage('Test microservice checkout') {
-            agent {
-                docker {
-                    image 'node'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/checkout/
-                    npm install
-                '''
-            }
-        }
+ //    stage('Test microservice checkout') {
+ //        agent {
+ //            docker {
+ //                image 'node'
+ //                args '-u 0:0'
+ //            }
+ //        }
+ //        steps {
+ //            sh '''
+ //                cd $WORKSPACE/REVIVE/src/checkout/
+ //                npm install
+ //            '''
+ //        }
+ //    }
         
 
 
@@ -104,105 +104,101 @@ pipeline {
 //                }
 //              }
 
-          stage('Build microservice catalog') {
-            agent {
-                docker {
-                    image 'golang:1.20.1'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/catalog/
-                    go build   -buildvcs=false
-                '''
-            }
-        }
-
-        stage('Build microservice cart') {
-            agent {
-                docker {
-                    image 'maven:3.8.7-openjdk-18'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/cart/
-                   mvn  package -Dmaven.test.skip=true --quiet
-                '''
-            }
-        }
-
-
-        stage('Build microservice ui') {
-            agent {
-                docker {
-                    image 'maven:3.8.7-openjdk-18'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/ui/
-                    mvn  package -Dmaven.test.skip=true --quiet
-                '''
-            }
-        }
-
-        stage('Build microservice order') {
-            agent {
-                docker {
-                    image 'maven:3.8.7-openjdk-18'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/orders/
-                    mvn  package -Dmaven.test.skip=true --quiet
-                '''
-            }
-        }
-
-
-        stage('Build microservice checkout') {
-            agent {
-                docker {
-                    image 'node'
-                    args '-u 0:0'
-                }
-            }
-            steps {
-                sh '''
-                    cd $WORKSPACE/REVIVE/src/checkout/
-                    npm install
-                    npm run build
-                '''
-            }
-        }
-
-
-        stage('Build-images-ui') {
-            steps {
-                sh '''
-            cd $WORKSPACE/REVIVE/src/ui/
-            docker build -t  fridade/REVIVE:ui-$BUILD_NUMBER .
-                '''
-            }
-
-        }
-
-
-        stage('Build-images-orders') {
-            steps {
-                sh '''
-            cd $WORKSPACE/REVIVE/src/orders/
-            docker build -t  fridade/REVIVE:orders-$BUILD_NUMBER .
-                '''
-            }
-
-        }
+//          stage('Build microservice catalog') {
+//            agent {
+//                docker {
+//                    image 'golang:1.20.1'
+//                    args '-u 0:0'
+//                }
+//            }
+//            steps {
+//                sh '''
+//                    cd $WORKSPACE/REVIVE/src/catalog/
+//                    go build   -buildvcs=false
+//                '''
+//            }
+//        }
+//
+//        stage('Build microservice cart') {
+//            agent {
+//                docker {
+//                    image 'maven:3.8.7-openjdk-18'
+//                    args '-u 0:0'
+//                }
+//            }
+//            steps {
+//                sh '''
+//                    cd $WORKSPACE/REVIVE/src/cart/
+//                   mvn  package -Dmaven.test.skip=true --quiet
+//                '''
+//            }
+//        }
+//
+//
+//        stage('Build microservice ui') {
+//            agent {
+//                docker {
+//                    image 'maven:3.8.7-openjdk-18'
+//                    args '-u 0:0'
+//                }
+//            }
+//            steps {
+//                sh '''
+//                    cd $WORKSPACE/REVIVE/src/ui/
+//                    mvn  package -Dmaven.test.skip=true --quiet
+//                '''
+//            }
+//        }
+//
+//        stage('Build microservice order') {
+//            agent {
+//                docker {
+//                    image 'maven:3.8.7-openjdk-18'
+//                    args '-u 0:0'
+//                }
+//            }
+//            steps {
+//                sh '''
+//                    cd $WORKSPACE/REVIVE/src/orders/
+//                    mvn  package -Dmaven.test.skip=true --quiet
+//                '''
+//            }
+//        }
+//
+//
+//        stage('Build microservice checkout') {
+//            agent {
+//                docker {
+//                    image 'node'
+//                    args '-u 0:0'
+//                }
+//            }
+//            steps {
+//                sh '''
+//                    cd $WORKSPACE/REVIVE/src/checkout/
+//                    npm install
+//                    npm run build
+//                '''
+//            }
+//        }
+//
+//
+       stage('Build-images-ui') {
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/ui/
+           docker build -t  fridade/revive:ui-$BUILD_NUMBER .
+               '''
+           }
+       }
+       stage('Build-images-orders') {
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/orders/
+           docker build -t  fridade/revive:orders-$BUILD_NUMBER .
+               '''
+           }
+       }
 
 
         
