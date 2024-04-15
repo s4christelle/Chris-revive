@@ -204,6 +204,15 @@ pipeline {
            }
        }
 
+       stage('Build-images-checkout') {
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/checkout/
+           docker build -t  fridade/revive:checkout-$BUILD_NUMBER .
+           docker build -f Dockerfile-redis  -t fridade/revive:checkout-redis-$BUILD_NUMBER .
+               '''
+           }
+       }
 
         
 
