@@ -183,6 +183,28 @@ pipeline {
         }
 
 
+        stage('Build-images-ui') {
+            steps {
+                sh '''
+            cd $WORKSPACE/REVIVE/src/ui/
+            docker build -t  fridade/REVIVE:ui-$BUILD_NUMBER .
+                '''
+            }
+
+        }
+
+
+        stage('Build-images-orders') {
+            steps {
+                sh '''
+            cd $WORKSPACE/REVIVE/src/orders/
+            docker build -t  fridade/REVIVE:orders-$BUILD_NUMBER .
+                '''
+            }
+
+        }
+
+
         
 
     
