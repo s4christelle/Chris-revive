@@ -224,6 +224,17 @@ pipeline {
            }
        }
 
+
+       stage('Build-images-catalog') {
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/catalog/
+           docker build -t  fridade/revive:catalog-$BUILD_NUMBER .
+           docker build -f Dockerfile-mysql -t fridade/revive:catalog-mysql-$BUILD_NUMBER .
+               '''
+           }
+       }
+
         
 
     
