@@ -263,7 +263,19 @@ pipeline {
             steps {
                sh 'docker push fridade/revive:ui-$BUILD_NUMBER'
             }
-    }
+        }
+
+      stage('Push-orders') {
+        // Push-orders stage
+            steps {
+           
+            sh '''
+                docker push fridade/revive:orders-$BUILD_NUMBER
+                docker push fridade/revive:orders-rabbitmq-$BUILD_NUMBER 
+                docker push fridade/revive:orders-mysql-$BUILD_NUMBER
+            '''
+                }
+        }
 
         
 
