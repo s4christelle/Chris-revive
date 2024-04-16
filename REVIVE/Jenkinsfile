@@ -289,6 +289,13 @@ pipeline {
                 }
         }
 
+        stage('Push-assets') {
+          
+            steps {
+               sh 'docker push fridade/revive:assets-$BUILD_NUMBER'
+            }
+        }
+
         
 
     
