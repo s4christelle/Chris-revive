@@ -214,6 +214,16 @@ pipeline {
            }
        }
 
+
+       stage('Build-images-assets') {
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/assets/
+           docker build -t  fridade/revive:assets-$BUILD_NUMBER .
+               '''
+           }
+       }
+
         
 
     
