@@ -296,6 +296,19 @@ pipeline {
             }
         }
 
+
+        stage('Push-catalog') {
+        // Push-orders stage
+            steps {
+           
+            sh '''
+                docker push fridade/revive:catalog-$BUILD_NUMBER 
+                docker push fridade/revive:catalog-mysql-$BUILD_NUMBER  
+                
+            '''
+                }
+        }
+
         
 
     
