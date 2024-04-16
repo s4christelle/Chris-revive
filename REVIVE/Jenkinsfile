@@ -309,6 +309,19 @@ pipeline {
                 }
         }
 
+        stage('Push-checkout') {
+        // Push-orders stage
+            steps {
+           
+            sh '''
+                docker push fridade/revive:checkout-$BUILD_NUMBER
+                docker push fridade/revive:checkout-db-$BUILD_NUMBER  
+                
+            '''
+                }
+        }
+        
+
         
 
     
