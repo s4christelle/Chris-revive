@@ -277,6 +277,18 @@ pipeline {
                 }
         }
 
+        stage('Push-cart') {
+        // Push-orders stage
+            steps {
+           
+            sh '''
+                docker push fridade/revive:cart-$BUILD_NUMBER 
+                docker push fridade/revive:cart-dynamodb-$BUILD_NUMBER 
+                
+            '''
+                }
+        }
+
         
 
     
