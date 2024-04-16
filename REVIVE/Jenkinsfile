@@ -204,12 +204,12 @@ pipeline {
            }
        }
 
-       stage('Build-images-checkout') {
+       stage('Build-images-cart') {
            steps {
                sh '''
-           cd $WORKSPACE/REVIVE/src/checkout/
-           docker build -t  fridade/revive:checkout-$BUILD_NUMBER .
-           docker build -f Dockerfile-redis  -t fridade/revive:checkout-redis-$BUILD_NUMBER .
+           cd $WORKSPACE/REVIVE/src/cart/
+           docker build -t  fridade/revive:cart-$BUILD_NUMBER .
+           docker build -f Dockerfile-dynamodb -t fridade/revive:cart-dynamodb-$BUILD_NUMBER .
                '''
            }
        }
