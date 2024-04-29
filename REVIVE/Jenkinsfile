@@ -199,7 +199,7 @@ pipeline {
            steps {
                sh '''
            cd $WORKSPACE/REVIVE/src/ui/
-           docker build -t  fridade/revive:ui-$BUILD_NUMBER .
+           docker build -t  chnguemna/ui:jenkins-$BUILD_NUMBER .
                '''
            }
        }
@@ -207,9 +207,9 @@ pipeline {
            steps {
                sh '''
            cd $WORKSPACE/REVIVE/src/orders/
-           docker build -t  fridade/revive:orders-$BUILD_NUMBER .
-           docker build -f Dockerfile-rabbitmq  -t fridade/revive:orders-rabbitmq-$BUILD_NUMBER .
-           docker build -f Dockerfile-mysql  -t fridade/revive:orders-mysql-$BUILD_NUMBER .
+           docker build -t  chnguemna/orders:jenkins-$BUILD_NUMBER .
+           docker build -f Dockerfile-rabbitmq  -t chnguemna/orders-rabbitmq:jenkins-$BUILD_NUMBER .
+           docker build -f Dockerfile-mysql  -t chnguemna/orders-mysql:jenkins-$BUILD_NUMBER .
 
 
                '''
@@ -220,8 +220,8 @@ pipeline {
            steps {
                sh '''
            cd $WORKSPACE/REVIVE/src/cart/
-           docker build -t  fridade/revive:cart-$BUILD_NUMBER .
-           docker build -f Dockerfile-dynamodb -t fridade/revive:cart-dynamodb-$BUILD_NUMBER .
+           docker build -t  chnguemna/cart:jenkins-$BUILD_NUMBER .
+           docker build -f Dockerfile-dynamodb -t chnguemna/cart-dynamodb:jenkins-$BUILD_NUMBER .
                '''
            }
        }
@@ -231,7 +231,7 @@ pipeline {
            steps {
                sh '''
            cd $WORKSPACE/REVIVE/src/assets/
-           docker build -t  fridade/revive:assets-$BUILD_NUMBER .
+           docker build -t  chnguemna/assets:jenkins-$BUILD_NUMBER .
                '''
            }
        }
@@ -241,8 +241,8 @@ pipeline {
            steps {
                sh '''
            cd $WORKSPACE/REVIVE/src/catalog/
-           docker build -t  fridade/revive:catalog-$BUILD_NUMBER .
-           docker build -f Dockerfile-mysql -t fridade/revive:catalog-mysql-$BUILD_NUMBER .
+           docker build -t  chnguemna/catalog:jenkins-$BUILD_NUMBER .
+           docker build -f Dockerfile-mysql -t chnguemna/catalog-mysql:jenkins-$BUILD_NUMBER .
                '''
            }
        }
@@ -252,8 +252,8 @@ pipeline {
            steps {
                sh '''
            cd $WORKSPACE/REVIVE/src/checkout/
-           docker build -t  fridade/revive:checkout-$BUILD_NUMBER .
-           docker build -f Dockerfile-db -t fridade/revive:checkout-db-$BUILD_NUMBER .
+           docker build -t  chnguemna/checkout:jenkins-$BUILD_NUMBER .
+           docker build -f Dockerfile-db -t chnguemna/checkout-db:jenkins-$BUILD_NUMBER .
                '''
            }
        }
@@ -261,7 +261,7 @@ pipeline {
        stage('Push-ui') {
           
             steps {
-               sh 'docker push fridade/revive:ui-$BUILD_NUMBER'
+               sh 'docker push chnguemna/ui:jenkins-$BUILD_NUMBER'
             }
         }
 
@@ -270,9 +270,9 @@ pipeline {
             steps {
            
             sh '''
-                docker push fridade/revive:orders-$BUILD_NUMBER
-                docker push fridade/revive:orders-rabbitmq-$BUILD_NUMBER 
-                docker push fridade/revive:orders-mysql-$BUILD_NUMBER
+                docker push chnguemna/orders:jenkins-$BUILD_NUMBER
+                docker push chnguemna/orders-rabbitmq:jenkins-$BUILD_NUMBER 
+                docker push chnguemna/orders-mysql:jenkins-$BUILD_NUMBER
             '''
                 }
         }
@@ -282,8 +282,8 @@ pipeline {
             steps {
            
             sh '''
-                docker push fridade/revive:cart-$BUILD_NUMBER 
-                docker push fridade/revive:cart-dynamodb-$BUILD_NUMBER 
+                docker push chnguemna/cart:jenkins-$BUILD_NUMBER 
+                docker push chnguemna/cart-dynamodb:jenkins-$BUILD_NUMBER 
                 
             '''
                 }
@@ -292,7 +292,7 @@ pipeline {
         stage('Push-assets') {
           
             steps {
-               sh 'docker push fridade/revive:assets-$BUILD_NUMBER'
+               sh 'docker push chnguemna/assets:jenkins-$BUILD_NUMBER'
             }
         }
 
@@ -302,8 +302,8 @@ pipeline {
             steps {
            
             sh '''
-                docker push fridade/revive:catalog-$BUILD_NUMBER 
-                docker push fridade/revive:catalog-mysql-$BUILD_NUMBER  
+                docker push chnguemna/catalog:jenkins-$BUILD_NUMBER 
+                docker push chnguemna/catalog-mysql:jenkins-$BUILD_NUMBER  
                 
             '''
                 }
@@ -314,12 +314,79 @@ pipeline {
             steps {
            
             sh '''
-                docker push fridade/revive:checkout-$BUILD_NUMBER
-                docker push fridade/revive:checkout-db-$BUILD_NUMBER  
+                docker push chnguemna/checkout:jenkins-$BUILD_NUMBER
+                docker push chnguemna/checkout-db:jenkins-$BUILD_NUMBER  
                 
             '''
                 }
         }
+
+
+        stage('helm-charts') {
+
+
+	      steps {
+	        script {
+	          withCredentials([
+	            string(credentialsId: 'github_token', variable: 'TOKEN')
+	          ]) {
+
+	            sh '''
+                rm -rf chris-revive-helm-chart || true 
+                git clone https://github.com/s4christelle/chris-revive-helm-chart.git
+                cd chris-revive-helm-chart
+cat << EOF > dev-values.yaml
+       repository:
+         tag:   jenkins-$BUILD_NUMBER
+         assets:
+          image: chnguemna/assets
+       
+         carts:
+          image: chnguemna/cart
+       
+         cart_dynamodb:
+          image: chnguemna/cart-dynamodb
+        
+         catalog:
+          image: chnguemna/catalog
+       
+        
+         catalog_mysql:
+          image: chnguemna/catalog-mysql
+       
+         checkout:
+          image: chnguemna/checkout
+       
+         checkout_redis:
+          image: chnguemna/checkout-redis
+       
+         orders:
+          image: chnguemna/orders
+       
+         orders_mysql:
+          image: chnguemna/orders-mysql
+       
+         orders_rabbitmq:
+          image: chnguemna/orders-rabbitmq 
+       
+         ui:
+          image: chnguemna/ui
+EOF
+git config --global user.name "chnguemna"
+git config --global user.email "info@chnguemna.com"
+   cat  dev-values.yaml
+   
+   git add -A 
+    git commit -m "Change from JENKINS" 
+    git push  https://chnguemna:$TOKEN@github.com/chnguemna/revive-helm-chart.git
+	            '''
+	          }
+
+	        }
+
+	      }
+
+	    }
         
 
         
